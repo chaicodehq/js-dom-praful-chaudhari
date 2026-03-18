@@ -89,25 +89,97 @@
  *   // => deep clone of stage with id "stage-clone"
  */
 export function insertDancer(stage, newDancer, referenceDancer) {
-  // Your code here
+    // Your code here
+
+    if (!stage) return false;
+    if (!newDancer) return false;
+
+    if (!referenceDancer) {
+        stage.appendChild(newDancer);
+        return true;
+    }
+
+    stage.insertBefore(newDancer, referenceDancer);
+    return true;
 }
 
 export function cloneDancer(dancer, deep) {
-  // Your code here
+    // Your code here
+
+    if (!dancer) return null;
+
+    const dancerCopy = dancer.cloneNode(deep);
+    const dancerId = dancer.getAttribute("id");
+    if (dancerId) {
+        const newId = `${dancerId}-copy`;
+        dancerCopy.setAttribute("id", newId);
+    }
+
+    return dancerCopy;
 }
 
 export function replaceDancer(stage, oldDancer, newDancer) {
-  // Your code here
+    // Your code here
+
+    if (!stage || !oldDancer || !newDancer) return null;
+
+    stage.replaceChild(newDancer, oldDancer);
+
+    return oldDancer;
 }
 
 export function removeDancer(stage, dancer) {
-  // Your code here
+    // Your code here
+
+    if (!stage || !dancer) return null;
+
+    if (!stage.contains(dancer)) return null;
+
+    dancer.remove();
+
+    return dancer;
 }
 
 export function rearrangeStage(stage, order) {
-  // Your code here
+    // Your code here
+
+    if (!stage || !Array.isArray(order)) return false;
+    if (stage.children.length !== order.length) return false;
+
+    const hasInvalidIndices = order.some(
+        (ord) => ord < 0 || ord >= order.length,
+    );
+
+    if (hasInvalidIndices) return false;
+
+    const toBeAppended = [];
+
+    let currentIndex = 0;
+    for (const ele of stage.children) {
+        if (order.includes(currentIndex)) {
+            toBeAppended[currentIndex] = ele;
+        }
+    }
+    toBeAppended.forEach((ele) => ele.remove());
+
+    for (const indx of order) {
+        stage.prepend(toBeAppended[indx]);
+    }
+    return true;
 }
 
 export function duplicateFormation(stage) {
-  // Your code here
+    // Your code here
+    // - Creates a deep clone of the entire stage using cloneNode(true)
+    // - Appends "-clone" to the clone's id (e.g., "stage" => "stage-clone")
+    // - Returns the cloned stage element (not appended anywhere)
+    // - Agar stage null/undefined, return null
+
+    if (!stage) return null;
+
+    const stageClone = stage.cloneNode(true);
+    const newId = `${stage.getAttribute("id")}-clone`;
+    stageClone.setAttribute("id", newId);
+
+    return stageClone;
 }

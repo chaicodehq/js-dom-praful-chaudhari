@@ -67,13 +67,139 @@
  *   // => [{ name: "Priya", side: "bride" }]
  */
 export function setupGuestList(containerElement) {
-  // Your code here
+    // Your code here
+
+    if (!containerElement) return null;
+
+    return {
+        addGuest(name, side) {
+            const div = document.createElement("div");
+            div.classList.add("guest-item");
+            div.setAttribute("data-name", name);
+            div.setAttribute("data-side", side);
+
+            const span = document.createElement("span");
+            span.textContent = name;
+
+            div.appendChild(span);
+
+            const btn = document.createElement("button");
+            btn.textContent = "Remove";
+            btn.classList.add("remove-btn");
+
+            div.appendChild(btn);
+
+            div.addEventListener("click", (e) => {
+                if (e.target.matches(".remove-btn")) {
+                    e.target.closest(".guest-item").remove();
+                }
+            });
+
+            containerElement.appendChild(div);
+
+            return div;
+        },
+
+        getGuests() {
+            const guestsNodes = containerElement.children;
+            const guests = [];
+            for (const node of guestsNodes) {
+                guests.push({
+                    name: node.getAttribute("data-name"),
+                    side: node.getAttribute("data-side"),
+                });
+            }
+            return guests;
+        },
+
+        removeGuest(name) {
+            const guestDivs = containerElement.children;
+            let toBeRemoved = null;
+
+            for (const d of guestDivs) {
+                if (d.getAttribute("data-name") === name) {
+                    toBeRemoved = d;
+                    break;
+                }
+            }
+            if (!toBeRemoved) return false;
+
+            toBeRemoved.remove();
+            return true;
+        },
+    };
 }
 
 export function setupThemeSelector(containerElement, previewElement) {
-  // Your code here
+    // Your code here
+
+    if (!containerElement || !previewElement) return null;
+
+    const btn1 = document.createElement("button");
+    const btn2 = document.createElement("button");
+    const btn3 = document.createElement("button");
+
+    btn1.classList.add("theme-btn");
+    btn2.classList.add("theme-btn");
+    btn3.classList.add("theme-btn");
+
+    btn1.textContent = "traditional";
+    btn2.textContent = "modern";
+    btn3.textContent = "royal";
+
+    btn1.setAttribute("data-theme", "traditional");
+    btn2.setAttribute("data-theme", "modern");
+    btn3.setAttribute("data-theme", "royal");
+
+    containerElement.appendChild(btn1);
+    containerElement.appendChild(btn2);
+    containerElement.appendChild(btn3);
+
+    containerElement.addEventListener("click", (e) => {
+        if (e.target.matches(".theme-btn")) {
+            const theme = e.target.closest(".theme-btn");
+            previewElement.className = theme.getAttribute("data-theme");
+            previewElement.setAttribute(
+                "data-theme",
+                theme.getAttribute("data-theme"),
+            );
+        }
+    });
+
+    return {
+        getTheme() {
+            return previewElement.getAttribute("data-theme");
+        },
+    };
 }
 
 export function setupCardEditor(cardElement) {
-  // Your code here
+    // Your code here
+
+    if (!cardElement) return null;
+
+    function clickHandler(e) {
+        const item = e.target.closest("[data-editable]");
+        if (item && cardElement.contains(item)) {
+            for (const ele of cardElement.children) {
+                ele.classList.remove("editing");
+                ele.contentEditable = "false";
+            }
+            item.classList.add("editing");
+            item.contentEditable = "true";
+        }
+    }
+
+    cardElement.addEventListener("click", clickHandler);
+
+    return {
+        getContent(field) {
+            for (const child of cardElement.children) {
+                if (child.getAttribute("data-editable") === field) {
+                    return child.textContent;
+                }
+            }
+            return null;
+        },
+    };
 }

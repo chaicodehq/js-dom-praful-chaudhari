@@ -72,21 +72,80 @@
  *   // => 2 (last frame applied: opacity is now "1")
  */
 export function applyBaseStyle(element, color, size) {
-  // Your code here
+    // Your code here
+
+    if (!element) return null;
+
+    element.style.backgroundColor = color;
+    element.style.width = size + "px";
+    element.style.height = size + "px";
+    element.style.borderRadius = "50%";
+
+    return element;
 }
 
 export function setPatternStyle(element, styles) {
-  // Your code here
+    // Your code here
+
+    if (!element) return -1;
+    if (typeof styles !== "object" || !styles) return 0;
+
+    let count = 0;
+    const entries = Object.entries(styles);
+
+    for (const [property, value] of entries) {
+        element.style[property] = value;
+    }
+
+    return entries.length;
 }
 
 export function getComputedStyles(element, properties) {
-  // Your code here
+    // Your code here
+    // - Takes an array of style property names
+    //   e.g., ["backgroundColor", "width", "opacity"]
+    // - Returns object with those properties and their current values
+    //   from element.style
+    //   e.g., { backgroundColor: "brown", width: "100px", opacity: "0.8" }
+    // - Agar element null/undefined, return null
+    // - Agar properties not array, return null
+
+    if (!element) return null;
+    if (!Array.isArray(properties)) return null;
+
+    const elementStyles = window.getComputedStyle(element);
+    console.log(elementStyles);
+
+    const retObj = {};
+
+    for (const property of properties) {
+        retObj[property] = elementStyles[property]
+            ? elementStyles[property]
+            : "";
+    }
+
+    return retObj;
 }
 
 export function toggleVisibility(element) {
-  // Your code here
+    // Your code here
+
+    if (!element) return null;
+
+    element.style.display = element.style.display === "none" ? "" : "none";
+
+    return element.style.display;
 }
 
 export function animateElement(element, frames) {
-  // Your code here
+    // Your code here
+
+    if (!element) return -1;
+    if (!Array.isArray(frames) || frames.length === 0) return -1;
+
+    const lastFrame = frames.at(-1);
+    const [lastFrameName, lastFrameValue] = Object.entries(lastFrame)[0];
+    element.style[lastFrameName] = lastFrameValue;
+
+    return frames.length;
 }

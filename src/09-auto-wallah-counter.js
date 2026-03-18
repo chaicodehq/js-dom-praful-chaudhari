@@ -87,29 +87,98 @@
  *   // => { total: 2, waiting: 1, serving: 1, completed: 0 }
  */
 export function findQueueContainer(element) {
-  // Your code here
+    // Your code here
+
+    if (!element) return null;
+
+    return element.closest(".queue-container");
 }
 
 export function getNextInQueue(element) {
-  // Your code here
+    // Your code here
+
+    if (!element) return null;
+
+    return element.nextElementSibling;
 }
 
 export function getPreviousInQueue(element) {
-  // Your code here
+    // Your code here
+
+    if (!element) return null;
+
+    return element.previousElementSibling;
 }
 
 export function getQueuePosition(element) {
-  // Your code here
+    // Your code here
+
+    if (!element) return -1;
+
+    const parent = element.parentNode;
+    if (!parent) return -1;
+
+    let indx = 0;
+    for (const child of parent.children) {
+        indx++;
+        if (child === element) {
+            break;
+        }
+    }
+    return indx;
 }
 
 export function moveToFront(element) {
-  // Your code here
+    // Your code here
+
+    if (!element) return false;
+
+    const parent = element.parentNode;
+    if (!parent) return false;
+
+    if (element === parent.children[0]) return false;
+
+    element.remove();
+
+    parent.insertBefore(element, parent.firstChild);
+    return true;
 }
 
 export function removeFromQueue(element) {
-  // Your code here
+    // Your code here
+
+    if (!element) return null;
+
+    const parent = element.parentNode;
+    if (!parent) return null;
+
+    parent.removeChild(element);
+
+    return element;
 }
 
 export function getQueueStats(queueContainer) {
-  // Your code here
+    // Your code here
+
+    if (!queueContainer) return null;
+
+    let total = 0;
+    const obj = {
+        waiting: 0,
+        serving: 0,
+        completed: 0,
+    };
+
+    for (const child of queueContainer.children) {
+        total++;
+        const clas = child.classList;
+        for (const childClas of clas)
+            if (childClas !== "queue-item") {
+                obj[childClas]++;
+            }
+    }
+    return {
+        total,
+        ...obj,
+    };
 }

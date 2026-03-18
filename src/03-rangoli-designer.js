@@ -70,25 +70,86 @@
  *   // => ["red", "blue"]
  */
 export function addColors(element, ...colors) {
-  // Your code here
+    // Your code here
+
+    if (!element) return -1;
+
+    let added = 0;
+
+    for (const color of colors) {
+        if (!element.classList.contains(color)) {
+            element.classList.add(color);
+            added++;
+        }
+    }
+
+    return added;
 }
 
 export function removeColors(element, ...colors) {
-  // Your code here
+    // Your code here
+
+    if (!element) return -1;
+
+    let removed = 0;
+
+    for (const color of colors) {
+        if (element.classList.contains(color)) {
+            element.classList.remove(color);
+            removed++;
+        }
+    }
+
+    return removed;
 }
 
 export function togglePattern(element, pattern) {
-  // Your code here
+    // Your code here
+
+    if (!element) return null;
+
+    const patternClass = `pattern-${pattern}`;
+
+    element.classList.toggle(patternClass);
+
+    return element.classList.contains(patternClass);
 }
 
 export function hasDesign(element, designName) {
-  // Your code here
+    // Your code here
+
+    if (!element) return false;
+
+    return element.classList.contains(`design-${designName}`);
 }
 
 export function replaceDesign(element, oldDesign, newDesign) {
-  // Your code here
+    // Your code here
+
+    if (!element) return false;
+
+    const oldD = `design-${oldDesign}`;
+    const newD = `design-${newDesign}`;
+
+    element.classList.add(newD);
+    if (element.classList.contains(oldD)) {
+        element.classList.remove(oldD);
+        return true;
+    }
+    return false;
 }
 
 export function getActiveColors(element) {
-  // Your code here
+    // Your code here
+    // - Returns array of all active color names from classes
+    // - Only classes starting with "color-" are considered
+    // - Return just the color name part (e.g., class "color-red" => "red")
+    // - Empty array if no color classes found
+    // - Agar element null/undefined, return []
+
+    if (!element) return [];
+
+    return Array.from(element.classList)
+        .filter((clas) => clas.startsWith("color-"))
+        .map((clas) => clas.slice(6));
 }
